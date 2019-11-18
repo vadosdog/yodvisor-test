@@ -11,4 +11,12 @@ class Order extends Model
 	const STATUS_COMPLETED = 3;
 	const STATUS_ON_HOLD = 4;
 	const STATUS_CANCELED = 5;
+
+	protected $fillable = [
+		'title',
+		'description',
+		'comment',
+		'image',
+		'status'
+	];
 }
