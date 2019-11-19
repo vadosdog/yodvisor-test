@@ -26,7 +26,7 @@ class CreateOrdersTable extends Migration
 			$table->string('title')->index();
 			$table->text('description');
 			$table->string('image')->nullable();
-			$table->text('comment');
+			$table->text('comment')->nullable();
 		});
 	}
 
