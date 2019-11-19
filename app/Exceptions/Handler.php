@@ -57,6 +57,10 @@ class Handler extends ExceptionHandler
 			'code' => 'UNKNOWN_ERROR'
 		];
 
+		if (config('app.debug')) {
+			$exceptionAnswer['devDetails'] = $exception->getMessage() . ' at ' . $exception->getFile() . ':' . $exception->getLine();
+		}
+
 		if ($exception instanceof PublicException) {
 			$exceptionAnswer['code'] = $exception->getCode();
 			$exceptionAnswer['message'] = $exception->getMessage();
