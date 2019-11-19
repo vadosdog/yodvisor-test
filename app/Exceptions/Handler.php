@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Support\Facades\Response;
 
@@ -64,6 +65,12 @@ class Handler extends ExceptionHandler
 		if ($exception instanceof PublicException) {
 			$exceptionAnswer['code'] = $exception->getCode();
 			$exceptionAnswer['message'] = $exception->getMessage();
+		}
+
+		if ($exception instanceof ValidationException) {
+			$exceptionAnswer['message'] = __('errors.validation_error');
+			$exceptionAnswer['code'] = 'VALIDATION_ERROR';
+			$exceptionAnswer['details'] = $exception->errors();
 		}
 
 

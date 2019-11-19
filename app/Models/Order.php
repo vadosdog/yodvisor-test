@@ -4,6 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Order
+ * @property string $id
+ * @property string $title
+ * @property string $description
+ * @property string $image
+ * @property string $comment
+ * @property int $status
+ * @package App\Models
+ */
 class Order extends Model
 {
 	const STATUS_PENDING = 1;

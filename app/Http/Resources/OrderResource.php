@@ -2,18 +2,26 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * Class UserResource
- * @mixin User
+ * Class OrderResource
+ * @mixin Order
  * @package App\Http\Resources
  */
 class OrderResource extends JsonResource
 {
 	public function toArray($request)
 	{
-		return ['kek'];
+		return [
+			'id' => (int)$this->id,
+			'title' => $this->title,
+			'description' => $this->description,
+			'comment' => $this->comment,
+			'image' => $this->image,
+			'status' => (int)$this->status,
+		];
 	}
 }

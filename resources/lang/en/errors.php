@@ -3,6 +3,6 @@
 return [
 
 	'unknown_exception' => 'Unknown error. Please, try later',
-	'kek' => 'Kek',
+	'validation_error' => 'Validation error',
 
 ];
