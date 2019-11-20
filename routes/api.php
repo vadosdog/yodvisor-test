@@ -17,7 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::group([
 	'prefix' => 'orders'
 ], function () {
-	Route::get('/', 'OrderController@get');
-	Route::post('/', 'OrderController@add')->name('orders.create');
 	Route::patch('/{order}', 'OrderController@update');
 });

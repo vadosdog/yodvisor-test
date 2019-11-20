@@ -32,7 +32,7 @@ class OrderController extends Controller
 
 		$order->save();
 
-		return Response::success(new OrderResource($order));
+		return redirect()->back()->with(['status' => __('Order created successfully')]);
 	}
 
 	public function get(Request $request)

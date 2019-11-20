@@ -11,9 +11,11 @@
 |
 */
 
+// Create order routes
 Route::get('/', function () {
     return view('newOrderPage');
 })->name('orders.newOrder');
+Route::post('/orders/', 'OrderController@add')->name('orders.create');
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
