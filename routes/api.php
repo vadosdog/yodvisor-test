@@ -14,8 +14,3 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([
-	'prefix' => 'orders'
-], function () {
-	Route::patch('/{order}', 'OrderController@update');
-});

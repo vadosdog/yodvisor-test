@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Exceptions\PublicException;
 use App\Http\Resources\OrdersCollection;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\Pagination;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use App\Traits\UploadTrait;
 
@@ -37,11 +40,15 @@ class OrderController extends Controller
 
 	public function get(Request $request)
 	{
-		$orders = Order::query()
+		/** @var LengthAwarePaginator $awarePaginator */
+		$awarePaginator = Order::query()
 			->orderBy('created_at', 'desc')
 			->paginate(15);
 
-		return Response::success(new OrdersCollection($orders));
+		return view('ordersList', [
+			'orders' => $awarePaginator->getCollection(),
+			'paginator' => $awarePaginator
+		]);
 	}
 
 	public function update(Request $request, Order $order)
@@ -59,7 +66,7 @@ class OrderController extends Controller
 		]);
 
 		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
-			throw new PublicException('order_completed');
+			return Redirect::back()->withErrors([__('Order status is completed or canceled')]);
 		}
 
 		if ($request->has('status')) {
@@ -72,6 +79,6 @@ class OrderController extends Controller
 
 		$order->save();
 
-		return Response::success(new OrderResource($order));
+		return Redirect::back()->with(['status' => __('Order updated successfully')]);
 	}
 }

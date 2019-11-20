@@ -57,4 +57,14 @@ class Order extends Model
 		'id' => 'integer',
 		'status' => 'integer',
 	];
+
+	public function getImageUrlAttribute()
+	{
+		return \Storage::url($this->image);
+	}
+
+	public function isEditable() :bool
+	{
+		return !in_array($this->status, [\App\Models\Order::STATUS_COMPLETED, \App\Models\Order::STATUS_CANCELED]);
+	}
 }

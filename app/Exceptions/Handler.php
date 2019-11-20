@@ -49,32 +49,35 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $exception)
 	{
-		return parent::render($request, $exception);
-		if ($exception instanceof NotFoundHttpException) {
-		}
-
-		$exceptionAnswer = [
-			'message' => __('errors.unknown_exception'),
-			'code' => 'UNKNOWN_ERROR'
-		];
-
-		if (config('app.debug')) {
-			$exceptionAnswer['devDetails'] = $exception->getMessage() . ' at ' . $exception->getFile() . ':' . $exception->getLine();
-		}
-
 		if ($exception instanceof PublicException) {
-			$exceptionAnswer['code'] = $exception->getCode();
-			$exceptionAnswer['message'] = $exception->getMessage();
+			return $this->invalid($request, $exception);
 		}
-
-		if ($exception instanceof ValidationException) {
-			$exceptionAnswer['message'] = __('errors.validation_error');
-			$exceptionAnswer['code'] = 'VALIDATION_ERROR';
-			$exceptionAnswer['details'] = $exception->errors();
-		}
-
-
-		return \Response::fail($exceptionAnswer);
+		return parent::render($request, $exception);
+//		if ($exception instanceof NotFoundHttpException) {
+//		}
+//
+//		$exceptionAnswer = [
+//			'message' => __('errors.unknown_exception'),
+//			'code' => 'UNKNOWN_ERROR'
+//		];
+//
+//		if (config('app.debug')) {
+//			$exceptionAnswer['devDetails'] = $exception->getMessage() . ' at ' . $exception->getFile() . ':' . $exception->getLine();
+//		}
+//
+//		if ($exception instanceof PublicException) {
+//			$exceptionAnswer['code'] = $exception->getCode();
+//			$exceptionAnswer['message'] = $exception->getMessage();
+//		}
+//
+//		if ($exception instanceof ValidationException) {
+//			$exceptionAnswer['message'] = __('errors.validation_error');
+//			$exceptionAnswer['code'] = 'VALIDATION_ERROR';
+//			$exceptionAnswer['details'] = $exception->errors();
+//		}
+//
+//
+//		return \Response::fail($exceptionAnswer);
 	}
 
 
