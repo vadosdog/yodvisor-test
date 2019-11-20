@@ -14,4 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('orders', 'OrderController@add')->name('orders.create');
+Route::group([
+	'prefix' => 'orders'
+], function () {
+	Route::get('/', 'OrderController@get');
+	Route::post('/', 'OrderController@add')->name('orders.create');
+});

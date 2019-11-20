@@ -26,11 +26,21 @@ class OrderController extends Controller
 		$order->fill($request->only(['title', 'description']));
 
 		if ($request->has('image')) {
+			//TODO сжатие изображения
 			$order->image = $this->uploadOne($request->file('image'));
 		}
 
 		$order->save();
 
 		return Response::success(new OrderResource($order));
+	}
+
+	public function get(Request $request)
+	{
+		$orders = Order::query()
+			->orderBy('created_at', 'desc')
+			->paginate(15);
+
+		return Response::success(new OrdersCollection($orders));
 	}
 }
