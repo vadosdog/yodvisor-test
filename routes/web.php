@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('newOrderPage');
-});
+})->name('orders.newOrder');
 
 // Authentication Routes...
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
