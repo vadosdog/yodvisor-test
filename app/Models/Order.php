@@ -47,4 +47,14 @@ class Order extends Model
 		'image',
 		'status'
 	];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'id' => 'integer',
+		'status' => 'integer',
+	];
 }
