@@ -16,7 +16,7 @@ class OrderController extends Controller
 
 	public function add(Request $request)
 	{
-		$validatedData = $request->validate([
+		$request->validate([
 			'title' => 'required|max:255',
 			'description' => 'required',
 			'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
