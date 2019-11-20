@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Order
+ *
  * @property string $id
  * @property string $title
  * @property string $description
@@ -13,6 +17,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $comment
  * @property int $status
  * @package App\Models
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|Order newModelQuery()
+ * @method static Builder|Order newQuery()
+ * @method static Builder|Order query()
+ * @method static Builder|Order whereComment($value)
+ * @method static Builder|Order whereCreatedAt($value)
+ * @method static Builder|Order whereDescription($value)
+ * @method static Builder|Order whereId($value)
+ * @method static Builder|Order whereImage($value)
+ * @method static Builder|Order whereStatus($value)
+ * @method static Builder|Order whereTitle($value)
+ * @method static Builder|Order whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Order extends Model
 {
