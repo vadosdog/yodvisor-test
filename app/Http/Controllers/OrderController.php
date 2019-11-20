@@ -43,4 +43,35 @@ class OrderController extends Controller
 
 		return Response::success(new OrdersCollection($orders));
 	}
+
+	public function update(Request $request, Order $order)
+	{
+		//Список доступных статусов. Возможно стоит унести куда нибудь, например в модель,
+		//Но пока проще так
+		$availableType = [
+			Order::STATUS_PROCESSING,
+			Order::STATUS_COMPLETED,
+			Order::STATUS_ON_HOLD,
+			Order::STATUS_CANCELED,
+		];
+		$request->validate([
+			'status' => ['integer', 'in:' . implode(', ', $availableType)],
+		]);
+
+		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
+			throw new PublicException('order_completed');
+		}
+
+		if ($request->has('status')) {
+			$order->status = $request->input('status');
+		}
+
+		if ($request->has('comment')) {
+			$order->comment = $request->input('comment');
+		}
+
+		$order->save();
+
+		return Response::success(new OrderResource($order));
+	}
 }

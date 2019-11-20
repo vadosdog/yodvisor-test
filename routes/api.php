@@ -19,4 +19,5 @@ Route::group([
 ], function () {
 	Route::get('/', 'OrderController@get');
 	Route::post('/', 'OrderController@add')->name('orders.create');
+	Route::patch('/{order}', 'OrderController@update');
 });
