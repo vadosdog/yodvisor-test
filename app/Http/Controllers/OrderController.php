@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\PublicException;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrdersCollection;
 use App\Models\Order;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Redirect;
 use App\Traits\UploadTrait;
 use Illuminate\View\View;
 
@@ -40,7 +42,7 @@ class OrderController extends Controller
 
 		$order->save();
 
-		return redirect()->back()->with(['status' => __('Order created successfully')]);
+		return \Response::success(new OrderResource($order), 201);
 	}
 
 	/**
@@ -57,6 +59,24 @@ class OrderController extends Controller
 			->orderBy('created_at', 'desc')
 			->paginate(15);
 
+		return \Response::success(new OrdersCollection($awarePaginator));
+	}
+
+	/**
+	 * Метод получения списка заявок
+	 *
+	 * @param Request $request
+	 * @return Factory|View
+	 */
+	public function getListPage(Request $request)
+	{
+		//TODO вынести в сервис
+		/** @var LengthAwarePaginator $awarePaginator */
+		$awarePaginator = Order::query()
+			->orderBy('created_at', 'desc')
+			->paginate(15);
+
+		//TODO реализовать пагинатор
 		return view('ordersList', [
 			'orders' => $awarePaginator->getCollection(),
 			'paginator' => $awarePaginator
@@ -69,7 +89,8 @@ class OrderController extends Controller
 	 *
 	 * @param Request $request
 	 * @param Order $order
-	 * @return RedirectResponse
+	 * @return mixed
+	 * @throws PublicException
 	 */
 	public function update(Request $request, Order $order)
 	{
@@ -88,13 +109,13 @@ class OrderController extends Controller
 
 		//TODO в middlware
 		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
-			return Redirect::back()->withErrors([__('Order status is completed or canceled')]);
+			throw new PublicException('order_completed', 409);
 		}
 
 		$order->fill($request->only(['status', 'comment']));
 
 		$order->save();
 
-		return Redirect::back()->with(['status' => __('Order updated successfully')]);
+		return \Response::success(new OrderResource($order));
 	}
 }

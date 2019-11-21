@@ -14,11 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Auth routes
 Route::group([
-	'middleware' => 'api',
 	'prefix' => 'auth'
 ], function ($router) {
-
 	Route::post('login', 'AuthController@login');
 	Route::group([
 		'middleware' => 'auth:api'
@@ -28,4 +27,18 @@ Route::group([
 		Route::post('me', 'AuthController@me');
 	});
 
+});
+
+// Order routes
+
+Route::group([
+	'prefix' => 'orders'
+], function () {
+	Route::post('/', 'OrderController@add')->name('orders.create');
+	Route::group([
+		'middleware' => 'auth:api'
+	], function () {
+		Route::get('/', 'OrderController@get')->name('orders.list');
+		Route::patch('/{order}', 'OrderController@update')->name('orders.update');
+	});
 });
