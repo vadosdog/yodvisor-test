@@ -17,3 +17,7 @@ Route::get('/', function () {
 })->name('orders.newOrder');
 
 Route::get('/orders', 'OrderController@getListPage')->name('orders.listPage');
+
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+//Route::post('logout', 'Auth\LoginController@logout')->name('logout');
