@@ -23,6 +23,7 @@ class OrderController extends Controller
 	 */
 	public function add(Request $request)
 	{
+		//TODO в Request
 		$request->validate([
 			'title' => 'required|max:255',
 			'description' => 'required',
@@ -50,6 +51,7 @@ class OrderController extends Controller
 	 */
 	public function get(Request $request)
 	{
+		//TODO вынести в сервис
 		/** @var LengthAwarePaginator $awarePaginator */
 		$awarePaginator = Order::query()
 			->orderBy('created_at', 'desc')
@@ -79,21 +81,17 @@ class OrderController extends Controller
 			Order::STATUS_ON_HOLD,
 			Order::STATUS_CANCELED,
 		];
+		//TODO в Request
 		$request->validate([
 			'status' => ['integer', 'in:' . implode(', ', $availableType)],
 		]);
 
+		//TODO в middlware
 		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
 			return Redirect::back()->withErrors([__('Order status is completed or canceled')]);
 		}
 
-		if ($request->has('status')) {
-			$order->status = $request->input('status');
-		}
-
-		if ($request->has('comment')) {
-			$order->comment = $request->input('comment');
-		}
+		$order->fill($request->only(['status', 'comment']));
 
 		$order->save();
 
