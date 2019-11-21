@@ -11,7 +11,7 @@
 |
 */
 
-// Create order routes
+// Order routes
 Route::get('/', function () {
     return view('newOrderPage');
 })->name('orders.newOrder');

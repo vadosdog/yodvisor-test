@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\PublicException;
-use App\Http\Resources\OrdersCollection;
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\Pagination;
 use App\Models\Order;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
 use App\Traits\UploadTrait;
+use Illuminate\View\View;
 
 class OrderController extends Controller
 {
 	use UploadTrait;
 
+	/**
+	 * Метод создания заявки с фронта с картиной
+	 *
+	 * @param Request $request
+	 * @return RedirectResponse
+	 */
 	public function add(Request $request)
 	{
 		$request->validate([
@@ -38,6 +42,12 @@ class OrderController extends Controller
 		return redirect()->back()->with(['status' => __('Order created successfully')]);
 	}
 
+	/**
+	 * Метод получения списка заявок
+	 *
+	 * @param Request $request
+	 * @return Factory|View
+	 */
 	public function get(Request $request)
 	{
 		/** @var LengthAwarePaginator $awarePaginator */
@@ -51,6 +61,14 @@ class OrderController extends Controller
 		]);
 	}
 
+	/**
+	 * Редактирование заявки админом
+	 * только статус и комментарий, если заявка не закрыта
+	 *
+	 * @param Request $request
+	 * @param Order $order
+	 * @return RedirectResponse
+	 */
 	public function update(Request $request, Order $order)
 	{
 		//Список доступных статусов. Возможно стоит унести куда нибудь, например в модель,

@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property string $description
  * @property string $image
+ * @property string $imageUrl
  * @property string $comment
  * @property int $status
  * @package App\Models
@@ -58,12 +59,22 @@ class Order extends Model
 		'status' => 'integer',
 	];
 
+	/**
+	 * Преобразует название картинки в урл
+	 *
+	 * @return string
+	 */
 	public function getImageUrlAttribute()
 	{
 		return \Storage::url($this->image);
 	}
 
-	public function isEditable() :bool
+	/**
+	 * Проверяет, может ли быть отредактирована заявка
+	 *
+	 * @return bool
+	 */
+	public function isEditable(): bool
 	{
 		return !in_array($this->status, [\App\Models\Order::STATUS_COMPLETED, \App\Models\Order::STATUS_CANCELED]);
 	}

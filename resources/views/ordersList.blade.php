@@ -35,6 +35,7 @@ $statuses = [
 						</ul>
 					</div>
 				@endif
+
 				@foreach($orders as $order)
 					<div class="card">
 						<div class="card-header">{{ $order->title }}</div>
