@@ -3,43 +3,15 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Support\Facades\Response;
 
 class Handler extends ExceptionHandler
 {
-	/**
-	 * A list of the exception types that are not reported.
-	 *
-	 * @var array
-	 */
-	protected $dontReport = [
-		//
-	];
-
-	/**
-	 * A list of the inputs that are never flashed for validation exceptions.
-	 *
-	 * @var array
-	 */
-	protected $dontFlash = [
-		'password',
-		'password_confirmation',
-	];
-
-	/**
-	 * Report or log an exception.
-	 *
-	 * @param \Exception $exception
-	 * @return void
-	 */
-	public function report(Exception $exception)
-	{
-		parent::report($exception);
-	}
-
 	/**
 	 * Render an exception into an HTTP response.
 	 *
@@ -49,35 +21,42 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $exception)
 	{
-		if ($exception instanceof PublicException) {
-			return $this->invalid($request, $exception);
-		}
-		return parent::render($request, $exception);
-//		if ($exception instanceof NotFoundHttpException) {
-//		}
-//
-//		$exceptionAnswer = [
-//			'message' => __('errors.unknown_exception'),
-//			'code' => 'UNKNOWN_ERROR'
-//		];
-//
-//		if (config('app.debug')) {
-//			$exceptionAnswer['devDetails'] = $exception->getMessage() . ' at ' . $exception->getFile() . ':' . $exception->getLine();
-//		}
-//
 //		if ($exception instanceof PublicException) {
-//			$exceptionAnswer['code'] = $exception->getCode();
-//			$exceptionAnswer['message'] = $exception->getMessage();
+//			return $this->invalid($request, $exception);
 //		}
-//
-//		if ($exception instanceof ValidationException) {
-//			$exceptionAnswer['message'] = __('errors.validation_error');
-//			$exceptionAnswer['code'] = 'VALIDATION_ERROR';
-//			$exceptionAnswer['details'] = $exception->errors();
-//		}
-//
-//
-//		return \Response::fail($exceptionAnswer);
+		if ($exception instanceof NotFoundHttpException) {
+			return parent::render($request, $exception);
+		}
+
+		$exceptionAnswer = [
+			'message' => __('errors.unknown_exception'),
+			'code' => 'UNKNOWN_ERROR'
+		];
+
+		if (config('app.debug')) {
+			$exceptionAnswer['devDetails'] = $exception->getMessage() . ' at ' . $exception->getFile() . ':' . $exception->getLine();
+		}
+
+		if ($exception instanceof PublicException) {
+			$exceptionAnswer['code'] = $exception->getCode();
+			$exceptionAnswer['message'] = $exception->getMessage();
+		} else if ($exception instanceof ValidationException) {
+			$exceptionAnswer['message'] = __('errors.validation_error');
+			$exceptionAnswer['code'] = 'VALIDATION_ERROR';
+			$exceptionAnswer['details'] = $exception->errors();
+		} else if ($exception instanceof AuthenticationException) {
+			$exceptionAnswer['code'] = 'UNAUTHENTICATED';
+			$exceptionAnswer['message'] = __('errors.unauthenticated');
+			$exception->status = 401; //TODO исправить
+		}
+
+		if ($exception instanceof HttpException) {
+			$code = $exception->getStatusCode();
+		} else {
+			$code = $exception->status ?? 200;
+		}
+
+		return \Response::fail($exceptionAnswer, $code);
 	}
 
 

@@ -11,18 +11,18 @@ class ResponseMacroServiceProvider extends ServiceProvider
 		/*
 		 * добавление методов success & fail для класса Response. Удобно для API
 		 */
-		\Response::macro('success', function ($value = null) {
+		\Response::macro('success', function ($value = null, $status = 200) {
 			return \Response::json([
 				'body' => $value,
 				'error' => null
-			]);
+			], $status);
 		});
 
-		\Response::macro('fail', function ($error = null) {
+		\Response::macro('fail', function ($error = null, $status = 200) {
 			return \Response::json([
 				'body' => null,
 				'error' => $error
-			]);
+			], $status);
 		});
 	}
 }
