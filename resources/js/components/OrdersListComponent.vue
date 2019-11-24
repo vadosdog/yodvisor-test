@@ -94,7 +94,12 @@ export default {
 				.get('/api/orders')
 				.then(({ data }) => {
 					this.orders = data.body.collection
-				})
+				}).catch(response => {
+					//TODO унести в App.created()
+
+
+		      window.location.href = '/login'; //TODO переписать на роутер
+			})
 	}
 	},
 }
