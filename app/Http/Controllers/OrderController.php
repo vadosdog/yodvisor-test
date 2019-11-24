@@ -89,11 +89,6 @@ class OrderController extends Controller
 	 */
 	public function update(UpdateOrderRequest $request, Order $order)
 	{
-		//TODO в middlware
-		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
-			throw new PublicException('order_completed', 409);
-		}
-
 		$order->fill($request->only(['status', 'comment']));
 
 		$order->save();

@@ -39,6 +39,8 @@ Route::group([
 		'middleware' => 'auth:api'
 	], function () {
 		Route::get('/', 'OrderController@get')->name('orders.list');
-		Route::patch('/{order}', 'OrderController@update')->name('orders.update');
+		Route::patch('/{order}', 'OrderController@update')
+			->name('orders.update')
+			->middleware('editable');
 	});
 });
