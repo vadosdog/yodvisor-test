@@ -20,8 +20,9 @@ class OrderResource extends JsonResource
 			'title' => $this->title,
 			'description' => $this->description,
 			'comment' => $this->comment,
-			'image' => Storage::url($this->image),
+			'image' => $this->image ? Storage::url($this->image) : null,
 			'status' => (int)$this->status,
+			'isEditable' => $this->isEditable(),
 		];
 	}
 }

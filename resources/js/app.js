@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('new-order-form', require('./components/CreateNewOrderFormComponent.vue').default);
 Vue.component('login-form', require('./components/LoginFormComponent.vue').default);
+Vue.component('orders-list', require('./components/OrdersListComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -31,6 +32,7 @@ Vue.component('login-form', require('./components/LoginFormComponent.vue').defau
 const token = localStorage.getItem('token')
 if (token) {
 	axios.defaults.headers.common['Authorization'] = token
+	//TODO refresh
 }
 
 const app = new Vue({

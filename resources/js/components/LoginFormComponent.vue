@@ -46,6 +46,7 @@ export default {
 			this.errors = {};
 			axios.post('/api/auth/login', this.fields).then(({ data }) => {
 				localStorage.setItem('token', `Bearer ${data.body.token}`)
+				window.location.href = '/orders'; //TODO переписать на роутер
 			}).catch((error) => {
 				localStorage.removeItem('token')
 				if (error.response.status === 422) {
