@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\PublicException;
+use App\Http\Requests\CreateOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrdersCollection;
 use App\Models\Order;
@@ -20,18 +22,11 @@ class OrderController extends Controller
 	/**
 	 * Метод создания заявки с фронта с картиной
 	 *
-	 * @param Request $request
+	 * @param CreateOrderRequest $request
 	 * @return RedirectResponse
 	 */
-	public function add(Request $request)
+	public function add(CreateOrderRequest $request)
 	{
-		//TODO в Request
-		$request->validate([
-			'title' => 'required|max:255',
-			'description' => 'required',
-			'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
-		]);
-
 		$order = new Order();
 		$order->fill($request->only(['title', 'description']));
 
@@ -87,26 +82,13 @@ class OrderController extends Controller
 	 * Редактирование заявки админом
 	 * только статус и комментарий, если заявка не закрыта
 	 *
-	 * @param Request $request
+	 * @param UpdateOrderRequest $request
 	 * @param Order $order
 	 * @return mixed
 	 * @throws PublicException
 	 */
-	public function update(Request $request, Order $order)
+	public function update(UpdateOrderRequest $request, Order $order)
 	{
-		//Список доступных статусов. Возможно стоит унести куда нибудь, например в модель,
-		//Но пока проще так
-		$availableType = [
-			Order::STATUS_PROCESSING,
-			Order::STATUS_COMPLETED,
-			Order::STATUS_ON_HOLD,
-			Order::STATUS_CANCELED,
-		];
-		//TODO в Request
-		$request->validate([
-			'status' => ['integer', 'in:' . implode(', ', $availableType)],
-		]);
-
 		//TODO в middlware
 		if (in_array($order->status, [Order::STATUS_COMPLETED, Order::STATUS_CANCELED])) {
 			throw new PublicException('order_completed', 409);
