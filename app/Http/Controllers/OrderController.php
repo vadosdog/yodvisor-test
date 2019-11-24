@@ -8,10 +8,10 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrdersCollection;
 use App\Models\Order;
+use App\Repositories\OrderRepository;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Traits\UploadTrait;
 use Illuminate\View\View;
 
@@ -48,11 +48,7 @@ class OrderController extends Controller
 	 */
 	public function get(Request $request)
 	{
-		//TODO вынести в сервис
-		/** @var LengthAwarePaginator $awarePaginator */
-		$awarePaginator = Order::query()
-			->orderBy('created_at', 'desc')
-			->paginate(15);
+		$awarePaginator = OrderRepository::getPaginated();
 
 		return \Response::success(new OrdersCollection($awarePaginator));
 	}
@@ -65,13 +61,9 @@ class OrderController extends Controller
 	 */
 	public function getListPage(Request $request)
 	{
-		//TODO вынести в сервис
-		/** @var LengthAwarePaginator $awarePaginator */
-		$awarePaginator = Order::query()
-			->orderBy('created_at', 'desc')
-			->paginate(15);
+		$awarePaginator = OrderRepository::getPaginated();
 
-		//TODO реализовать пагинатор
+		//TODO реализовать пагинатор на фронте
 		return view('ordersList', [
 			'orders' => $awarePaginator->getCollection(),
 			'paginator' => $awarePaginator
@@ -85,7 +77,6 @@ class OrderController extends Controller
 	 * @param UpdateOrderRequest $request
 	 * @param Order $order
 	 * @return mixed
-	 * @throws PublicException
 	 */
 	public function update(UpdateOrderRequest $request, Order $order)
 	{
